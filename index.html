@@ -1,83 +1,113 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Lek do Black Marketing</title>
     <style>
       body {
         margin: 0;
-        padding: 0;
-        background: black;
-        color: lime;
-        font-family: monospace;
+        background: #0a0a0a;
+        color: #00ff99;
+        font-family: 'Courier New', monospace;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
         height: 100vh;
+        overflow: hidden;
       }
-      #chat {
-        width: 90%;
-        max-width: 600px;
+      header {
         background: #111;
         padding: 20px;
-        border-radius: 10px;
-        border: 1px solid lime;
-        overflow-y: auto;
-        height: 60vh;
-        margin-bottom: 10px;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: bold;
+        border-bottom: 2px solid #00ff99;
       }
-      #input {
-        width: 90%;
-        max-width: 600px;
+      #chat {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: #000;
+      }
+      .msg {
+        margin: 10px 0;
+      }
+      .lek {
+        color: #00ff99;
+      }
+      .user {
+        color: #ff0066;
+      }
+      form {
         display: flex;
+        border-top: 2px solid #00ff99;
       }
       input {
         flex: 1;
-        padding: 10px;
+        padding: 15px;
+        font-size: 1rem;
+        background: #111;
+        color: #fff;
         border: none;
-        border-radius: 10px 0 0 10px;
         outline: none;
       }
       button {
-        background: lime;
-        color: black;
+        padding: 15px;
+        background: #00ff99;
+        color: #000;
+        font-weight: bold;
         border: none;
-        padding: 10px;
-        border-radius: 0 10px 10px 0;
         cursor: pointer;
+      }
+      #img-lek {
+        width: 150px;
+        height: auto;
+        margin: 10px auto;
+        display: block;
+        border-radius: 20px;
       }
     </style>
   </head>
   <body>
-    <h1>LEK DO BLACK MARKETING</h1>
-    <div id="chat">
-      <p><strong>Lek:</strong> Fala, corno! O que tu quer saber?</p>
-    </div>
-    <div id="input">
-      <input
-        type="text"
-        id="msg"
-        placeholder="Manda tua pergunta aí, guerreiro..."
-      />
-      <button onclick="responder()">Enviar</button>
-    </div>
+    <header>Lek do Black Marketing</header>
+    <img id="img-lek" src="https://i.imgur.com/fR8H0GH.png" alt="Lek do Black" />
+    <div id="chat"></div>
+    <form id="form">
+      <input type="text" id="prompt" placeholder="Fala com o Lek do Black..." autocomplete="off" required />
+      <button type="submit">Mandar</button>
+    </form>
 
     <script>
-      function responder() {
-        const msg = document.getElementById("msg").value;
-        const chat = document.getElementById("chat");
-        if (msg.trim() === "") return;
+      const chat = document.getElementById('chat');
+      const form = document.getElementById('form');
+      const promptInput = document.getElementById('prompt');
 
-        chat.innerHTML += `<p><strong>Você:</strong> ${msg}</p>`;
-
-        // Resposta fixa só pra simular o bot
-        chat.innerHTML += `<p><strong>Lek:</strong> Tu quer moleza? Vai vender, porra! Não tem desculpa, tem estratégia. Próximo.</p>`;
-
-        document.getElementById("msg").value = "";
+      function appendMessage(sender, text) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + sender;
+        div.textContent = (sender === 'lek' ? 'Lek do Black: ' : 'Você: ') + text;
+        chat.appendChild(div);
         chat.scrollTop = chat.scrollHeight;
       }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const prompt = promptInput.value;
+        appendMessage('user', prompt);
+        promptInput.value = '';
+
+        try {
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt })
+          });
+          const data = await res.json();
+          appendMessage('lek', data.response);
+        } catch (err) {
+          appendMessage('lek', 'Erro do Lek do Black: ' + err.message);
+        }
+      });
     </script>
   </body>
 </html>
