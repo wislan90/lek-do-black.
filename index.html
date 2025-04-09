@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lek do Black Marketing</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        color: lime;
+        font-family: monospace;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      #chat {
+        width: 90%;
+        max-width: 600px;
+        background: #111;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid lime;
+        overflow-y: auto;
+        height: 60vh;
+        margin-bottom: 10px;
+      }
+      #input {
+        width: 90%;
+        max-width: 600px;
+        display: flex;
+      }
+      input {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 10px 0 0 10px;
+        outline: none;
+      }
+      button {
+        background: lime;
+        color: black;
+        border: none;
+        padding: 10px;
+        border-radius: 0 10px 10px 0;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>LEK DO BLACK MARKETING</h1>
+    <div id="chat">
+      <p><strong>Lek:</strong> Fala, corno! O que tu quer saber?</p>
+    </div>
+    <div id="input">
+      <input
+        type="text"
+        id="msg"
+        placeholder="Manda tua pergunta aí, guerreiro..."
+      />
+      <button onclick="responder()">Enviar</button>
+    </div>
+
+    <script>
+      function responder() {
+        const msg = document.getElementById("msg").value;
+        const chat = document.getElementById("chat");
+        if (msg.trim() === "") return;
+
+        chat.innerHTML += `<p><strong>Você:</strong> ${msg}</p>`;
+
+        // Resposta fixa só pra simular o bot
+        chat.innerHTML += `<p><strong>Lek:</strong> Tu quer moleza? Vai vender, porra! Não tem desculpa, tem estratégia. Próximo.</p>`;
+
+        document.getElementById("msg").value = "";
+        chat.scrollTop = chat.scrollHeight;
+      }
+    </script>
+  </body>
+</html>
